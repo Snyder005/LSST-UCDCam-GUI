@@ -1,0 +1,31 @@
+P: /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.1/1-4.1.4/1-4.1.4:1.0/ttyUSB5/tty/ttyUSB5
+N: ttyUSB5
+S: lakeshore_335
+S: serial/by-id/usb-Silicon_Labs_Model_335_Temperature_Controller_LSA15AJ-if00-port0
+S: serial/by-path/pci-0000:00:1d.7-usb-0:4.1.4:1.0-port0
+E: DEVLINKS=/dev/lakeshore_335 /dev/serial/by-id/usb-Silicon_Labs_Model_335_Temperature_Controller_LSA15AJ-if00-port0 /dev/serial/by-path/pci-0000:00:1d.7-usb-0:4.1.4:1.0-port0
+E: DEVNAME=/dev/ttyUSB5
+E: DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.1/1-4.1.4/1-4.1.4:1.0/ttyUSB5/tty/ttyUSB5
+E: ID_BUS=usb
+E: ID_MM_CANDIDATE=1
+E: ID_MODEL=Model_335_Temperature_Controller
+E: ID_MODEL_ENC=Model\x20335\x20Temperature\x20Controller
+E: ID_MODEL_ID=0300
+E: ID_PATH=pci-0000:00:1d.7-usb-0:4.1.4:1.0
+E: ID_PATH_TAG=pci-0000_00_1d_7-usb-0_4_1_4_1_0
+E: ID_REVISION=0100
+E: ID_SERIAL=Silicon_Labs_Model_335_Temperature_Controller_LSA15AJ
+E: ID_SERIAL_SHORT=LSA15AJ
+E: ID_TYPE=generic
+E: ID_USB_DRIVER=cp210x
+E: ID_USB_INTERFACES=:ff0000:
+E: ID_USB_INTERFACE_NUM=00
+E: ID_VENDOR=Silicon_Labs
+E: ID_VENDOR_ENC=Silicon\x20Labs
+E: ID_VENDOR_ID=1fb9
+E: MAJOR=188
+E: MINOR=5
+E: SUBSYSTEM=tty
+E: UDEV_LOG=3
+E: USEC_INITIALIZED=25483294
+

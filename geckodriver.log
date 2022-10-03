@@ -1,0 +1,14 @@
+1556550898694	geckodriver	INFO	geckodriver 0.19.1
+1556550898735	geckodriver	INFO	Listening on 127.0.0.1:56009
+1556550899722	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.qplEOfjc0LZf"
+1556550903833	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1556550903835	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1556550903953	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1556550903954	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1556550904919	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1556550904920	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1556550904932	addons.xpi	WARN	Add-on langpack-en-ZA@firefox.mozilla.org is not compatible with application version.
+1556550904933	addons.xpi	WARN	Add-on langpack-en-GB@firefox.mozilla.org is not compatible with application version.
+1556550905757	Marionette	INFO	Listening on port 2828
+[Child 5949] ###!!! ABORT: Aborting on channel error.: file /build/firefox-Jg8XHi/firefox-52.0.2+build1/ipc/glue/MessageChannel.cpp, line 2143
+[Child 5949] ###!!! ABORT: Aborting on channel error.: file /build/firefox-Jg8XHi/firefox-52.0.2+build1/ipc/glue/MessageChannel.cpp, line 2143

@@ -1,0 +1,5 @@
+cd support_files/astro_papers/
+put particle_graph.png
+exit
+
+

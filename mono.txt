@@ -1,0 +1,33 @@
+P: /devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.3/1-4.3.1/1-4.3.1:1.0/ttyUSB2/tty/ttyUSB2
+N: ttyUSB2
+S: monochromator
+S: serial/by-id/usb-Acton_Research_ACTON_RESEARCH_CONTROLLER_15061090-if00-port0
+S: serial/by-path/pci-0000:00:1d.7-usb-0:4.3.1:1.0-port0
+E: DEVLINKS=/dev/monochromator /dev/serial/by-id/usb-Acton_Research_ACTON_RESEARCH_CONTROLLER_15061090-if00-port0 /dev/serial/by-path/pci-0000:00:1d.7-usb-0:4.3.1:1.0-port0
+E: DEVNAME=/dev/ttyUSB2
+E: DEVPATH=/devices/pci0000:00/0000:00:1d.7/usb1/1-4/1-4.3/1-4.3.1/1-4.3.1:1.0/ttyUSB2/tty/ttyUSB2
+E: ID_BUS=usb
+E: ID_MM_CANDIDATE=1
+E: ID_MODEL=ACTON_RESEARCH_CONTROLLER
+E: ID_MODEL_ENC=ACTON\x20RESEARCH\x20CONTROLLER
+E: ID_MODEL_FROM_DATABASE=ARC SpectraPro UV/VIS/IR Monochromator/Spectrograph
+E: ID_MODEL_ID=0100
+E: ID_PATH=pci-0000:00:1d.7-usb-0:4.3.1:1.0
+E: ID_PATH_TAG=pci-0000_00_1d_7-usb-0_4_3_1_1_0
+E: ID_REVISION=0400
+E: ID_SERIAL=Acton_Research_ACTON_RESEARCH_CONTROLLER_15061090
+E: ID_SERIAL_SHORT=15061090
+E: ID_TYPE=generic
+E: ID_USB_DRIVER=ftdi_sio
+E: ID_USB_INTERFACES=:ffffff:
+E: ID_USB_INTERFACE_NUM=00
+E: ID_VENDOR=Acton_Research
+E: ID_VENDOR_ENC=Acton\x20Research
+E: ID_VENDOR_FROM_DATABASE=Acton Research Corp.
+E: ID_VENDOR_ID=0647
+E: MAJOR=188
+E: MINOR=2
+E: SUBSYSTEM=tty
+E: UDEV_LOG=3
+E: USEC_INITIALIZED=25434986
+
