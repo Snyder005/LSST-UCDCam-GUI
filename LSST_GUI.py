@@ -15,6 +15,7 @@ import Analysis
 import Lakeshore_335
 import BK_Precision_9184
 import DewarFill
+from org.lsst.ccs.scripting import CCS
 
 #************** START OF MAIN PROGRAM ****************** 
 master = Tk() # Main GUI Window
@@ -28,6 +29,7 @@ dewarfill = DewarFill.DewarFill(master)
 comm_status = Comm_Status.Comm_Status(master,stage, sphere, camera, lakeshore, bk, dewarfill)
 analysis = Analysis.Analysis(master,camera)
 stdout_stderr = StdOut_StdErr.StdOut_StdErr(master)
+CCS.aliases = {'focal_plane' : 'ucd-fp'}
 
 stage.Define_Frame()
 sphere.Define_Frame()

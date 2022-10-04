@@ -7,7 +7,7 @@
 
 # Using the Tkinter module for interface design
 from Tkinter import *
-import numpy, time, datetime, sys, subprocess
+import numpy, time, datetime, os, sys, subprocess
 from astropy.time import Time
 from Phidgets.PhidgetException import PhidgetErrorCodes, PhidgetException
 from Phidgets.Devices.InterfaceKit import InterfaceKit
@@ -17,7 +17,9 @@ from Phidgets.Devices.InterfaceKit import InterfaceKit
 class DewarFill(object):
     def __init__(self, master):
         self.master = master
-        self.fill_log_name='/sandbox/lsst/lsst/GUI/particles/fill_log.dat'
+	this_file = os.path.abspath(__file__)
+	this_dir = os.path.dirname(this_file)
+        self.fill_log_name = os.path.join(this_dir, 'log', 'fill_log.dat')
         self.valve = InterfaceKit()
         self.comm_status = False
         self.ov_temp = 999.0

@@ -13,6 +13,18 @@ import os, signal, subprocess, datetime
 import eolib, ucdavis2lsst
 from Phidgets.Devices.InterfaceKit import InterfaceKit
 
+# New imports
+from org.lsst.ccs.scripting import CCS
+from java.time import Duration
+from ccs import proxies
+
+CLEARDELAY = 0.07
+
+fp = CCS.attachProxy("focal-plane")
+if agentName != "focal-plane":
+   fp = CCS.attachProxy(agentName) # re-attach to ccs subsystem
+imageTimeout = 60.0
+
 class Camera(object):
     def __init__(self, master, stage, sphere, lakeshore, bk):
         self.stop_exposures = False
@@ -22,7 +34,9 @@ class Camera(object):
         self.bk = bk
         self.lakeshore = lakeshore
         self.vbb = 0.0
-        CfgFile = "/sandbox/lsst/lsst/GUI/UCDavis.cfg"
+        this_file = os.path.abspath(__file__)
+        this_dir = os.path.dirname(this_file)
+        CfgFile = os.path.join(this_dir, 'config', 'UCDavis.cfg')
         if self.CheckIfFileExists(CfgFile):
             self.CfgFile = CfgFile
         else:
@@ -143,17 +157,13 @@ class Camera(object):
         mask_type = self.mask_type.get()
         sequence_num = self.sequence_num_ent.get()
         filter=self.filter.get()
-        self.fitsfilename = ("testdata/"+sensor_id+"_"+test_type+"_"+image_type+"_%03d_"+timestamp+".fits")%(int(sequence_num))
-        print "Filename:%s\n"%self.fitsfilename
+
+	fits_header_data = {'ExposureTime' : exptime, 'TestType' : test_type, 'ImageType' : image_type}
         self.master.update()
-        if image_type == 'light':
-            self.exp_acq(exptime=exptime, fitsfilename=self.fitsfilename)
-        elif image_type == 'flat':
-            self.exp_acq(exptime=exptime, fitsfilename=self.fitsfilename)
-        elif image_type == 'spot':
-            self.exp_acq(exptime=exptime, fitsfilename=self.fitsfilename)
+        if image_type in ['light', 'flat', 'spot']:
+            self.exp_acq(exptime=exptime, fits_header_data=self.fits_header_data)
         elif image_type == 'dark':
-            self.dark_acq(exptime=exptime, fitsfilename=self.fitsfilename)
+            self.dark_acq(exptime=exptime, fits_header_data=self.fits_header_data)
         elif image_type == 'bias':
             # A bias exposure is just a dark exposure with 0 time.
             self.dark_acq(exptime=0.0, fitsfilename=self.fitsfilename)
@@ -167,8 +177,8 @@ class Camera(object):
             self.lakeshore.Read_Temp()
             self.stage.Read_Encoders()
             # Add other things here(temp, etc. when they are available)
-            ucdavis2lsst.fix(self.fitsfilename, self.CfgFile, sensor_id, mask_type, test_type, image_type, sequence_num, exptime, filter, srcpwr, mondiode, \
-                             self.lakeshore.Temp_A, self.lakeshore.Temp_B, self.lakeshore.Temp_Set, stage_pos = self.stage.read_pos)
+#            ucdavis2lsst.fix(self.fitsfilename, self.CfgFile, sensor_id, mask_type, test_type, image_type, sequence_num, exptime, filter, srcpwr, mondiode, \
+#                             self.lakeshore.Temp_A, self.lakeshore.Temp_B, self.lakeshore.Temp_Set, stage_pos = self.stage.read_pos)
         except Exception as e:
             print "Fits file correction failed! Exception of type %s and args = \n"%type(e).__name__, e.args    
             print "File %s is not LSST compliant"%self.fitsfilename
@@ -744,83 +754,29 @@ class Camera(object):
         self.master.update()
         return
 
-    def exp_acq(self, exptime=0.0, fitsfilename='test.fits'):
-        """Python version of the CamCmd exp_acq script"""
-        NoFlushFile = eolib.getCfgVal(self.CfgFile,"EXP_NO_FLUSH_FILE")
-        if not self.CheckIfFileExists(NoFlushFile):
-            print "No Flush File not found.  Exiting exp_acq"
-            return
-        FlushFile = eolib.getCfgVal(self.CfgFile,"EXP_FLUSH_FILE")
-        if not self.CheckIfFileExists(FlushFile):
-            print "Flush File not found.  Exiting exp_acq"
-            return
-        if self.vendor == "E2V":
-            PurgeFile = eolib.getCfgVal(self.CfgFile,"PURGE_FILE")
-            PurgeTime = int(eolib.getCfgVal(self.CfgFile,"E2V_PURGE_TIME"))
-            if not self.CheckIfFileExists(PurgeFile):
-                print "Purge File not found.  Exiting exp_acq"
-                return
-            UnpurgeFile = eolib.getCfgVal(self.CfgFile,"UNPURGE_FILE")
-            if not self.CheckIfFileExists(UnpurgeFile):
-                print "Unpurge file not found.  Exiting exp_acq."
-                return
-            BackwardsFile = eolib.getCfgVal(self.CfgFile,"BACKWARDS_FILE")
-            BackwardsTime = int(eolib.getCfgVal(self.CfgFile,"E2V_BACKWARDS_TIME"))
-            if not self.CheckIfFileExists(BackwardsFile):
-                print "Backwards File not found.  Exiting exp_acq"
-                return
+    def exp_acq(self, exptime=0.0, fits_header_data=None, clears=1, annotation=None, locations=None):
+        """CCS exposure commands"""
 
-        start = time.time()
-        print "Before fclr, time = ",time.time() - start
-        self.runcmd([self.edtsaodir+"/fclr", "2"])                       # clear the CCD 
-        print "After fclr, time = ",time.time() - start
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "50000080"])     # setup for tens of millisecond exposure time
-        self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", NoFlushFile])     # load the signal file to stop parallel flushing
-        print "After Stopping parallel flush, time = ",time.time() - start
-        if self.vendor == "E2V" and PurgeTime > 0:
-            self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", PurgeFile])     # load the signal file to do E2V purge
-            time.sleep(PurgeTime / 1000.0)
-            self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", UnpurgeFile])     # load the signal file to stop the purge
-            print "Purge done, time = ",time.time() - start
-        if self.vendor == "E2V" and BackwardsTime > 0:
-            self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", BackwardsFile])     # load the signal file to do E2V backwards flushing
-            time.sleep(BackwardsTime / 1000.0)
-            self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", NoFlushFile])     # load the signal file to stop parallel flushing
-            print "Backwards flush done, time = ",time.time() - start
-        self.runcmd([self.edtsaodir+"/expose", str(exptime)])            # do the exposure
-        print "After expose, time = ",time.time() - start
-        time.sleep(1.0)   # delay for shutter to close all the way?
-        print "Before image16, time = ",time.time() - start
-        if self.vendor == "ITL":
-            self.runcmd([self.edtsaodir+"/image16", "-F", "-f", fitsfilename, "-x", "542", "-y", "2022", "-n", "16"]) # readout
-        elif self.vendor == "E2V":
-            self.runcmd([self.edtsaodir+"/image16", "-F", "-f", fitsfilename, "-x", "572", "-y", "2048", "-n", "16"]) # readout
-        print "After image16, time = ",time.time() - start
-        self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", FlushFile])       # load the signal file to re-start parallel flushing
-        print "After edtwriteblk, time = ",time.time() - start
+	fp.setHeaderKeywords(fits_header_data)
+        imageName = fp.allocateImageName()
+        fp.clearAndStartNamedIntegration(imageName, clears, annotation, locations)
+        time.sleep(CLEARDELAY)
+        self.shutter.openShutter(exptime)
+        fp.endIntegration()
+        fp.waitForFitsFiles(imageTimeout)
+
         return
 
-    def dark_acq(self, exptime=0.0, fitsfilename='test.fits'):
-        """Python version of the CamCmd dark_acq script"""
-        NoFlushFile = eolib.getCfgVal(self.CfgFile,"DARK_NO_FLUSH_FILE")
-        if not self.CheckIfFileExists(NoFlushFile):
-            print "No Flush File not found.  Exiting dark_acq"
-            self.master.update()
-            return
-        FlushFile = eolib.getCfgVal(self.CfgFile,"DARK_FLUSH_FILE")
-        if not self.CheckIfFileExists(FlushFile):
-            print "Flush File not found.  Exiting dark_acq"
-            self.master.update()
-            return
-        self.runcmd([self.edtsaodir+"/fclr", "2"])                       # clear the CCD 
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "50000080"])     # setup for tens of millisecond exposure time
-        self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", NoFlushFile])     # load the signal file to stop parallel flushing
-        self.runcmd([self.edtsaodir+"/dark", str(exptime)])            # do the exposure
-        if self.vendor == "ITL":
-            self.runcmd([self.edtsaodir+"/image16", "-F", "-f", fitsfilename, "-x", "542", "-y", "2022", "-n", "16"]) # readout
-        elif self.vendor == "E2V":
-            self.runcmd([self.edtsaodir+"/image16", "-F", "-f", fitsfilename, "-x", "572", "-y", "2048", "-n", "16"]) # readout
-        self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", FlushFile])       # load the signal file to re-start parallel flushing
+    def dark_acq(self, exptime=0.0, fits_header_data=None, clears=1, annotation=None, locations=None):
+
+	fp.setHeaderKeywords(fits_header_data)
+        imageName = fp.allocateImageName()
+        fp.clearAndStartNamedIntegration(imageName, clears, annotation, locations)
+        time.sleep(CLEARDELAY)
+        time.sleep(exptime)
+        fp.endIntegration()
+        fp.waitForFitsFiles(imageTimeout)
+
         return
 
     def ccd_setup(self):
