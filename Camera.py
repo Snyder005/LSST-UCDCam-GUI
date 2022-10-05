@@ -52,53 +52,7 @@ class Camera(object):
             sys.exit()
         self.fitsfilename = "dummy.fits" # Just a dummy - not really used
         self.relay = InterfaceKit()
-        return
-            
-    def GetVoltageLookup(self):
-        self.vbb = 0.0
-        try:
-            self.voltage_lookup = [  # Lookup table with voltage values
-                {"Name":"VCLK_LO",    "Value": float(eolib.getCfgVal(self.CfgFile,"VCLK_LO")),    "Vmin":  0.0, "Vmax": 10.0, "chan":["a0188"]},
-                {"Name":"VCLK_HI",    "Value": float(eolib.getCfgVal(self.CfgFile,"VCLK_HI")),    "Vmin":  0.0, "Vmax": 10.0, "chan":["a0080"]},
-                {"Name":"VV4",        "Value": float(eolib.getCfgVal(self.CfgFile,"VV4")),        "Vmin": -5.0, "Vmax":  5.0, "chan":["a0280"]},
-                {"Name":"VDD",        "Value": float(eolib.getCfgVal(self.CfgFile,"VDD")),        "Vmin":  0.0, "Vmax": 30.0, "chan":["a0380"]},
-                {"Name":"VRD",        "Value": float(eolib.getCfgVal(self.CfgFile,"VRD")),        "Vmin":  0.0, "Vmax": 20.0, "chan":["a0384"]},
-                {"Name":"VOD",        "Value": float(eolib.getCfgVal(self.CfgFile,"VOD")),        "Vmin":  0.0, "Vmax": 30.0, "chan":["a0388","a038c"]},
-                {"Name":"VOG",        "Value": float(eolib.getCfgVal(self.CfgFile,"VOG")),        "Vmin": -5.0, "Vmax":  5.0, "chan":["a0288","a028c"]},
-                {"Name":"PAR_CLK_LO", "Value": float(eolib.getCfgVal(self.CfgFile,"PAR_CLK_LO")), "Vmin":-10.0, "Vmax":  0.0, "chan":["a0184"]},
-                {"Name":"PAR_CLK_HI", "Value": float(eolib.getCfgVal(self.CfgFile,"PAR_CLK_HI")), "Vmin":  0.0, "Vmax": 10.0, "chan":["a0084"]},
-                {"Name":"SER_CLK_LO", "Value": float(eolib.getCfgVal(self.CfgFile,"SER_CLK_LO")), "Vmin":-10.0, "Vmax":  0.0, "chan":["a0180"]},
-                {"Name":"SER_CLK_HI", "Value": float(eolib.getCfgVal(self.CfgFile,"SER_CLK_HI")), "Vmin":  0.0, "Vmax": 10.0, "chan":["a008c"]},
-                {"Name":"RG_LO",      "Value": float(eolib.getCfgVal(self.CfgFile,"RG_LO")),      "Vmin":-10.0, "Vmax":  0.0, "chan":["a018c"]},
-                {"Name":"RG_HI",      "Value": float(eolib.getCfgVal(self.CfgFile,"RG_HI")),      "Vmin":  0.0, "Vmax": 10.0, "chan":["a0088"]}]
-            self.vbb = float(eolib.getCfgVal(self.CfgFile,"BSS_TEST"))
-        except Exception as e:
-            print "Voltage lookup routine failed! Exception of type %s and args = \n"%type(e).__name__, e.args    
-        return
-
-    def GetOffsetLookup(self):
-        try:
-            self.offset_lookup = [ # Lookup table with channel offsets
-                {"Segment":1,  "Channel":1,  "chan":"3008", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_1"))},
-                {"Segment":2,  "Channel":5,  "chan":"3108", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_2"))},
-                {"Segment":3,  "Channel":2,  "chan":"3018", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_3"))},
-                {"Segment":4,  "Channel":6,  "chan":"3118", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_4"))},
-                {"Segment":5,  "Channel":3,  "chan":"3028", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_5"))},
-                {"Segment":6,  "Channel":7,  "chan":"3128", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_6"))},
-                {"Segment":7,  "Channel":4,  "chan":"3038", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_7"))},
-                {"Segment":8,  "Channel":8,  "chan":"3138", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_8"))},
-                {"Segment":9,  "Channel":9,  "chan":"3208", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_9"))},
-                {"Segment":10, "Channel":13, "chan":"3308", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_10"))},
-                {"Segment":11, "Channel":10, "chan":"3218", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_11"))},
-                {"Segment":12, "Channel":14, "chan":"3318", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_12"))},
-                {"Segment":13, "Channel":11, "chan":"3228", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_13"))},
-                {"Segment":14, "Channel":15, "chan":"3328", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_14"))},
-                {"Segment":15, "Channel":12, "chan":"3238", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_15"))},
-                {"Segment":16, "Channel":16, "chan":"3338", "offset":int(eolib.getCfgVal(self.CfgFile,"OFF_SEG_16"))}]
-        except Exception as e:
-            print "Secment offset lookup routine failed! Exception of type %s and args = \n"%type(e).__name__, e.args    
-            self.master.update()
-        return
+        return 
 
     def CheckIfFileExists(self, filename):
         try:
@@ -106,27 +60,6 @@ class Camera(object):
             return True
         except OSError:
             return False
-
-    def Initialize_BSS_Relay(self):
-        print('Connecting to BSS controller...')
-        self.relay.openPhidget(403840) # Serial number 403840 is the Vbb control Phidgets relay 
-        self.relay.waitForAttach(10000)
-        if (self.relay.isAttached() and self.relay.getSerialNum() == 403840):
-            # Serial number checks to make sure we have the right Phidgets
-            print "Successfully initialized BSS Relay\n" 
-            self.master.update()
-            self.bss_relay_status = True
-        else:
-            print "Failed to initialize BSS relay\n"
-            self.master.update()
-            self.bss_relay_status = False
-        self.relay.closePhidget()
-        return
-        
-    def Close_BSS_Relay(self):
-        print('Closing BSS relay connection...')
-        self.relay.closePhidget()
-        return
 
     def Check_Communications(self):
         """Checks on communications status with the camera, called by the communications frame/class"""
@@ -158,7 +91,7 @@ class Camera(object):
         sequence_num = self.sequence_num_ent.get()
         filter=self.filter.get()
 
-	fits_header_data = {'ExposureTime' : exptime, 'TestType' : test_type, 'ImageType' : image_type}
+        fits_header_data = {'ExposureTime' : exptime, 'TestType' : test_type, 'ImageType' : image_type}
         self.master.update()
         if image_type in ['light', 'flat', 'spot']:
             self.exp_acq(exptime=exptime, fits_header_data=self.fits_header_data)
@@ -166,7 +99,7 @@ class Camera(object):
             self.dark_acq(exptime=exptime, fits_header_data=self.fits_header_data)
         elif image_type == 'bias':
             # A bias exposure is just a dark exposure with 0 time.
-            self.dark_acq(exptime=0.0, fitsfilename=self.fitsfilename)
+            self.dark_acq(exptime=0.0, fits_header_data=self.fits_header_data)
         else:
             print "Image type not recogized.  Exposure not done."
             return
@@ -642,32 +575,7 @@ class Camera(object):
         return (stdoutdata, stderrdata)
 
     def bbias_on(self):
-        """Python version of the bbias_on script"""
-        print('Connecting to BSS controller...')
-        # First set the voltage on the BK and turn the output on
-        self.bk.Set_Voltage(-self.vbb) # Note minus sign!
-        self.bk.bbias_on()
-        time.sleep(0.5)
-        if self.bss_relay_status:
-            self.relay.openPhidget(403840) # Serial number 403840 is the Vbb control Phidgets relay
-            self.relay.waitForAttach(10000)
-            if (self.relay.isAttached() and self.relay.getSerialNum() == 403840):
-                self.relay.setOutputState(0,True)
-                print('BSS is now ON')
-                print('Done!')
-                self.master.update()
-                self.relay.closePhidget()
-                return
-            else : 
-                print('Failed to connect to Phidget controller') 
-                self.master.update()
-                self.relay.closePhidget()
-                return
-        else : 
-            print('Failed to connect to Phidget controller') 
-            self.master.update()
-            self.relay.closePhidget()
-            return
+        raise NotImplementedError
 
     def bbias_on_button(self):
         # This is called when bbias_on is called from the GUI.
@@ -712,48 +620,6 @@ class Camera(object):
             self.relay.closePhidget()
             return
 
-    def sixteen_ch_setup(self):
-        """Python version of the CamCmd 16ch_setup script"""
-
-        print "Setting up for generic 16 channel readout...\n"
-        # initialize edt interface
-        InitFile = eolib.getCfgVal(self.CfgFile,"INIT_FILE")
-        if not self.CheckIfFileExists(InitFile):
-            print "Init File not found.  Exiting sixteen channel setup"
-            return
-        #self.runcmd(["initrcx0"]) # This script just does the following:
-        self.runcmd([self.EDTdir+"/initcam", "-u", "0", "-c", "0", "-f", InitFile]) 
-
-        self.runcmd([self.edtsaodir+"/crst"]) # Camera reset
-        # Turn off the greyscale generator
-        print "Turning greyscale generator off\n"
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "30400000"]) # ad board #1 gray scale off
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "31400000"]) # ad board #2 gray scale off
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "32400000"]) # ad board #3 gray scale off
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "33400000"]) # ad board #4 gray scale off
-
-        # Set the system gain to high
-        # Note that this gets over-ridden in ccd_setup.
-        self.gain("HIGH")
-
-        # Set unidirectional mode
-        print "Setting unidirectional CCD serial shift mode\n"
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "43000001"]) # uni on
-
-        # Set split mode on. "Why on?" you ask. Beats me.
-        print "Setting CCD serial register shifts to split mode\n"
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "41000001"]) # split on   
-
-        self.ccd_channels()
-
-        print "Setting default ADC offsets\n"
-
-        self.ccd_offsets()
-        self.Check_Communications()
-        print "16ch_setup Done.\n"
-        self.master.update()
-        return
-
     def exp_acq(self, exptime=0.0, fits_header_data=None, clears=1, annotation=None, locations=None):
         """CCS exposure commands"""
 
@@ -780,55 +646,10 @@ class Camera(object):
         return
 
     def ccd_setup(self):
-        """Python version of the sta3800_setup script"""
-        self.GetVoltageLookup()
-        self.sixteen_ch_setup()
-        print "Setting up CCD ...\n"
-        self.master.update()
-        self.ccd_timing()
-        self.ccd_channels()
-        self.ccd_volts()
-        self.ccd_offsets()
-        gain = eolib.getCfgVal(self.CfgFile,"GAIN_MODE")
-        self.gain(gain)
-        # Found we need to wait 60 seconds for system to stabilize
-        #print "Waiting 60 seconds for system to stabilize.  Be patient!"
-        #self.master.update()
-        #time.sleep(60)
-        print "ccd_setup done.\n"
-        self.master.update()
-        return
+        raise NotImplementedError
 
     def ccd_off(self):
-        """Python version of the sta3800_off script"""
-        print"Powering down the ccd device...\n"
-        self.GetVoltageLookup()
-        self.bbias_off()
-        time.sleep(0.5)
-        supplies = self.voltage_lookup
-        supplies.reverse()
-        # Powering down in reverse order of power up
-        for supply in supplies:
-            name = supply["Name"]
-            vmin = supply["Vmin"]
-            vmax = supply["Vmax"]
-            value = 0.0
-
-            if value < vmin or value > vmax:
-                print "Requested voltage for %s exceeds limits.  Exiting voltage setup\n"%name
-                return
-            if vmin < 0.0:
-                DACval = int(round(4095 - round(round((value - vmin) / (vmax - vmin), 3) * 4095, 3), 0))
-            else:
-                DACval = int(round(round((value - vmin) / (vmax - vmin), 3) * 4095, 0))
-            for chan in supply["chan"]:
-                print "Command= %s"%(self.edtsaodir+"/edtwriten -c %s%03x"%(chan,DACval))
-                self.runcmd([self.edtsaodir+"/edtwriten", "-c", "%s%03x"%(chan,DACval)])
-                #print "Set Voltage %s to %.2f volts: at ADC channel %s DAC setting %03x"%(name,value,chan,DACval)
-                print "Set Voltage %s to %.2f volts"%(name,value)
-            time.sleep(0.1)
-        print "ccd_off done.\n"
-        return
+        raise NotImplementedError
 
     def gain(self, value):
         """Python version of the CamCmds gain script"""
@@ -841,122 +662,5 @@ class Camera(object):
         else:
             print "Bogus gain setting\n"
             print 'Usage: gain("LOW") or gain("HIGH")\n'
-        self.master.update()
-        return
-
-    def ccd_timing(self):
-        """Python version of the sta3800_timing script"""
-        print "Setting up CCD default timing...\n"
-        Par_Clk_Delay = int(eolib.getCfgVal(self.CfgFile,"PAR_CLK_DELAY"))
-        print "Setting parallel clock delay to %d\n"%Par_Clk_Delay
-        self.master.update()
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "46000%03x"%Par_Clk_Delay]) # Set parallel clock delay to 6
-
-        SigBFile = eolib.getCfgVal(self.CfgFile,"TIM_FILE")
-        if not self.CheckIfFileExists(SigBFile):
-            print "Signal file not found.  May need to run Perl conversion routine. Exiting ccd_timing"
-            return
-        print "Loading serial readout signal file %s\n"%SigBFile
-        self.master.update()
-        self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", SigBFile])     # load the signal file
-
-        PatBFile = eolib.getCfgVal(self.CfgFile,"PAT_FILE")
-        if not self.CheckIfFileExists(PatBFile):
-            print "Pattern file not found.  May need to run Perl conversion routine. Exiting ccd_timing"
-            self.master.update()
-            return
-        print "Loading default pattern file %s\n"%PatBFile
-        self.master.update()
-        self.runcmd([self.edtsaodir+"/edtwriteblk", "-f", PatBFile])     # load the pattern file
-        print "ccd_timing done.\n"
-        self.master.update()
-        return
-
-
-    def ccd_offsets(self):
-        """Python version of the sta3800_offsets script"""
-
-        self.GetOffsetLookup()         
-        for segment in self.offset_lookup:
-            seg = segment["Segment"]
-            chan = segment["chan"]
-            channel = segment["Channel"]
-            offset = segment["offset"]
-
-            if offset > 2047 or offset < -2048 :
-                print "Offset value outside of -2048 to +2047 limit. Offsets not done."
-                self.master.update()
-                return
-            elif offset >= 0:
-                dac_offset = offset
-            else:
-                dac_offset = 4096 + offset
-
-            self.runcmd([self.edtsaodir+"/edtwriten", "-c", "%s0%03x"%(chan,dac_offset)])
-            print "Set segment %2d offset to %4d"%(seg,offset)
-            self.master.update()
-        print "ccd_offsets done.\n"
-        self.master.update()
-        return
-
-    def ccd_volts(self):
-        """Python version of the sta3800_volts script"""
-        print "Setting up ccd default voltages...\n"
-        self.master.update()
-        self.GetVoltageLookup()
-        self.bbias_off()
-        time.sleep(0.5)
-        supplies = self.voltage_lookup
-        for supply in supplies:
-            name = supply["Name"]
-            vmin = supply["Vmin"]
-            vmax = supply["Vmax"]
-            value = supply["Value"]
-
-            if value < vmin or value > vmax:
-                print "Requested voltage for %s exceeds limits.  Exiting voltage setup\n"%name
-                self.master.update()
-                return
-            if vmin < 0.0:
-                DACval = int(round(4095 - round(round((value - vmin) / (vmax - vmin), 3) * 4095, 3), 0))
-            else:
-                DACval = int(round(round((value - vmin) / (vmax - vmin), 3) * 4095, 0))
-            for chan in supply["chan"]:
-                print "Command= %s"%(self.edtsaodir+"/edtwriten -c %s%03x"%(chan,DACval))
-                self.runcmd([self.edtsaodir+"/edtwriten", "-c", "%s%03x"%(chan,DACval)])
-                #print "Set Voltage %s to %.2f volts: at ADC channel %s DAC setting %03x"%(name,value,chan,DACval)
-                print "Set Voltage %s to %.2f volts"%(name,value)
-                self.master.update()
-            time.sleep(0.1)
-        self.bbias_on()
-        print "ccd_volts done.\n"
-        self.master.update()
-        return
-
-    def ccd_channels(self):
-        """Python version of the sta3800_channels script"""
-        print "Setting up for 16 channel readout...\n"
-        self.master.update()
-        # I tried using this to adjust the read order, but that appears not to work.
-        # It seems to ignore this.
-        # We want them in order, and we want all of them
-        print "Set up channel readout order to 0,1,2,3...15\n"
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000042"]) #  Board 0
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000140"]) # 
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000243"]) #  
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000341"])  #
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000446"]) #  Board 1
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000544"]) # 
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000647"]) #  
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000745"])  #
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "5100084d"]) #  Board 2
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "5100094f"]) # 
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000a4c"]) #  
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000b4e"])  #
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000c49"]) #  Board 3
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000d4b"]) # 
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51000e48"]) #  
-        self.runcmd([self.edtsaodir+"/edtwriten", "-c", "51008f4a"])  #
-        print "ccd_channels done.\n"
         self.master.update()
         return
