@@ -23,7 +23,7 @@ CLEARDELAY = 0.07
 fp = CCS.attachProxy("focal-plane")
 if agentName != "focal-plane":
    fp = CCS.attachProxy(agentName) # re-attach to ccs subsystem
-imageTimeout = 60.0
+imageTimeout = Duration.ofSeconds(60)
 
 class Camera(object):
     def __init__(self, master, stage, sphere, lakeshore, bk):
