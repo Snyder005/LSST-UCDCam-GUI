@@ -575,7 +575,30 @@ class Camera(object):
         return (stdoutdata, stderrdata)
 
     def bbias_on(self):
-        raise NotImplementedError
+        print('Connecting to BSS controller...')
+        self.bk.Set_Voltage(-self.vbb)
+        self.bk.bbias_on()
+        time.sleep(0.5)
+        if self.bss_relay_status:
+            self.relay.openPhidget(403840) # Serial number 403840 is the Vbb control Phidgets relay
+            self.relay.waitForAttach(10000)
+            if (self.relay.isAttached() and self.relay.getSerialNum() == 403840):
+                self.relay.setOutputState(0,True)
+                print('BSS is now ON')
+                print('Done!')
+                self.master.update()
+                self.relay.closePhidget()
+                return
+            else : 
+                print('Failed to connect to Phidget controller') 
+                self.master.update()
+                self.relay.closePhidget()
+                return
+        else : 
+            print('Failed to connect to Phidget controller') 
+            self.master.update()
+            self.relay.closePhidget()
+            return
 
     def bbias_on_button(self):
         # This is called when bbias_on is called from the GUI.
