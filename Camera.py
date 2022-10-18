@@ -670,9 +670,49 @@ class Camera(object):
 
     def ccd_setup(self):
         raise NotImplementedError
+        print "Setting up CCD...\n"
+        # Check if dphi power is on else raise error.
+        # Check if BBS is on else raise error.
+        
+        # Get CCD type (maybe run some check here?)
+        ccdTypes = fp.sendSynchCommand("getCCDType")
+        ccdType = ccdTypes['R22/Reb0']
+
+        ## CCS commands to turn on CCD
+        #register = fp.sendSynchCommand("R22/Reb0 getRegister 0x100000 1"
+        #print register
+        #fp.sendSynchCommand("R22/Reb0 setCCDClocksLow")
+        #register = fp.sendSynchCommand("R22/Reb0 getRegister 0x100000 1"
+        #print register
+        #fp.sendSynchCommand(Duration.ofSeconds(300), "R22/Reb0 testCCDShorts")
+        # Turn on dphi
+        #time.sleep(1.0)
+        #fp.sendSynchCommand(Duration.ofSeconds(300), "R22/Reb0 powerCCDsOn")
+        
+        #fp.sendSynchCommand("R22/Reb0 setRegister 0x100000 [0x3d4]")
+        #register = fp.sendSyncCommand("R22/Reb0 getRegister 0x100000 1")
+        #print register
+
+        print "ccd_setup done.\n"
+        self.master.update()
+        return
 
     def ccd_off(self):
         raise NotImplementedError
+        print "Powering down the ccd device...\n"
+        ## Check initial state
+        # is BSS on
+        # is dphi on
+        # if hvswitch on, turn off
+        # if BSS on, turn off
+
+        #fp.sendSynchCommand("R22/Reb0 setCCDClocksLow")
+        # if dphi on, turn off
+     
+        #fp.sendSynchCommand("R22/Reb0 powerCCDsOff")
+    
+        print "ccd_off done.\n"
+        return
 
     def gain(self, value):
         """Python version of the CamCmds gain script"""
